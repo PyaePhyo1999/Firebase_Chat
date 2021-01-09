@@ -37,9 +37,7 @@ class MainActivity : BaseActivity() {
     private val etSentMessage by lazy {
         findViewById<EditText>(R.id.etSentMessage)
     }
-    private val vmFactory by lazy{
-        ChatViewModelFactory()
-    }
+
     private val vmMain: MainViewModel by viewModels<MainViewModel>()
 
     private val chatAdapter = ChatAdapter()
