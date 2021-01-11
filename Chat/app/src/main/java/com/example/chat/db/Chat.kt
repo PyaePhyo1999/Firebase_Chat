@@ -1,4 +1,4 @@
-package com.example.chat
+package com.example.chat.db
 
 data class Chat(
         val chatId : String?,

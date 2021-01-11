@@ -1,8 +1,8 @@
-package com.example.chat
+package com.example.chat.models
 
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.chat.db.Chat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -21,7 +21,6 @@ class MainViewModel : ViewModel(), FirebaseAuth.AuthStateListener {
     private val chatDateReference : DatabaseReference = Firebase.database.reference.child("Chat")
     private val auth : FirebaseAuth = Firebase.auth
     init {
-
         chatDateReference.addValueEventListener(
             object : ValueEventListener {
 

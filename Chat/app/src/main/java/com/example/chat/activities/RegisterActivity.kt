@@ -1,10 +1,14 @@
-package com.example.chat
+package com.example.chat.activities
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
+import com.example.chat.R
+import com.example.chat.events.RegisterViewEvent
+import com.example.chat.models.RegisterViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
@@ -15,7 +19,7 @@ class RegisterActivity : BaseActivity(){
 
     companion object{
         fun intent(context : Context) : Intent {
-            return Intent(context,RegisterActivity::class.java)
+            return Intent(context, RegisterActivity::class.java)
         }
     }
 
@@ -29,18 +33,34 @@ class RegisterActivity : BaseActivity(){
         findViewById<TextInputEditText>(R.id.etPasswordAgain)
     }
 
+
     private val btnRegister by lazy {
         findViewById<MaterialButton>(R.id.btnRegister)
     }
-    private lateinit var auth : FirebaseAuth
+
+    private val vmRegister : RegisterViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        auth = Firebase.auth
+        vmRegister.registerViewEventLiveData.observe(this,{event->
+            when(event){
+                RegisterViewEvent.Success -> {
+                    mainActivity()
+                }
+                is RegisterViewEvent.Error -> {
+                    Toast.makeText(this,event.message,Toast.LENGTH_LONG).show()
+                }
+            }
+
+        })
+
+
         btnRegister.setOnClickListener {
             register()
+
         }
     }
 
@@ -48,24 +68,7 @@ class RegisterActivity : BaseActivity(){
         val email = etEmail.text.toString()
         val password = etPassword.text.toString()
         val cfPassword = etPasswordAgain.text.toString()
-
-        if (password != cfPassword)
-        {
-            Toast.makeText(this,"Password does not match",Toast.LENGTH_LONG).show()
-        }
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this){
-                if (it.isSuccessful){
-                 mainActivity()
-                }
-                else
-                {
-                    Log.w(".Register", "createUserWithEmail:failure", it.exception)
-                    Toast.makeText(baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
-
-                }
-            }
+        vmRegister.register(email,password,cfPassword)
     }
 
 

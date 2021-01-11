@@ -1,9 +1,12 @@
-package com.example.chat
+package com.example.chat.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil.*
 import androidx.recyclerview.widget.ListAdapter
+import com.example.chat.db.Chat
+import com.example.chat.viewholders.ChatViewHolder
+import com.example.chat.R
 
 class ChatAdapter() : ListAdapter<Chat, ChatViewHolder>(
     object: ItemCallback<Chat>() {
